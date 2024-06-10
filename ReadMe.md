@@ -11,6 +11,8 @@ roslaunch ov_msckf simulation_4cams.launch
 rosrun rviz rviz -d ov_msckf/launch/display.rviz
 ```
 
+## Original Info
+
 Welcome to the OpenVINS project!
 The OpenVINS project houses some core computer vision code along with a state-of-the art filter-based visual-inertial
 estimator. The core filter is an [Extended Kalman filter](https://en.wikipedia.org/wiki/Extended_Kalman_filter) which
