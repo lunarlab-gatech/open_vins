@@ -1,0 +1,54 @@
+%YAML:1.0
+
+cam0:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [0.00348369, -0.00197191, 0.99999199, 0.04741809]
+    - [0.99999365, 0.00076353, -0.00348219, -0.06272441]
+    - [-0.00075666, 0.99999776, 0.00197456, -0.00873926]
+    - [0.0, 0.0, 0.0, 1.0]
+  cam_overlaps: [0]
+  camera_model: equidistant
+  distortion_coeffs: [-0.043389324930215536, 0.003107640448830285, -0.0037427054744242987, 0.0007777186933455688]
+  distortion_model: radtan
+  intrinsics: [352.8913557983792, 352.7847153190321, 346.97323452281586, 271.81100577288737] #fu, fv, cu, cv
+  resolution: [720, 540]
+  rostopic: /alphasense/cam0/image_raw
+cam1:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [0.007474902478342, -0.000172744429460, 0.999972049900158, 0.048219245678170]
+    - [0.999957276093225, 0.005440237933989, -0.007473852086951, 0.046418049642180]
+    - [-0.005438797431935, 0.999985182573916, 0.000213404946902, -0.008470083796820]
+    - [0.0, 0.0, 0.0, 1.0]
+  cam_overlaps: [0]
+  camera_model: equidistant
+  distortion_coeffs: [-0.04338445691750529, 0.0041968714754669675, -0.003800042168422922, 0.0006032811514173166]
+  distortion_model: radtan
+  intrinsics: [351.8009892830421, 351.6280684414713, 367.8012904752455, 254.8007945841205] #fu, fv, cu, cv
+  resolution: [720, 540]
+  rostopic: /alphasense/cam1/image_raw
+cam2:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [0.99999204, 0.00394231, -0.00062215, -0.00814651]
+    - [-0.00059289, -0.0074175, -0.99997231, -0.08003969]
+    - [-0.00394681, 0.99996472, -0.0074151, -0.00975499]
+    - [0.0, 0.0, 0.0, 1.0]
+  cam_overlaps: [0]
+  camera_model: equidistant
+  distortion_coeffs: [-0.038573120123828596, -0.001592762006804195, 0.00026012483984812467, -0.0004093066719415896]
+  distortion_model: radtan
+  intrinsics: [349.15902033416296, 349.19507664547535, 342.4496484912912, 259.7918462559407] #fu, fv, cu, cv
+  resolution: [720, 540]
+  rostopic: /alphasense/cam2/image_raw
+cam3:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [-0.99988962, 0.01238942, 0.00820085, -0.00606784]
+    - [0.0081229, -0.00632904, 0.99994698, 0.06457457]
+    - [0.01244067, 0.99990322, 0.00622771, -0.00765811]
+    - [0.0, 0.0, 0.0, 1.0]
+  cam_overlaps: [0]
+  camera_model: equidistant
+  distortion_coeffs: [-0.037908345844681106, -0.00012037903855186935, -0.0011713947305290857, 0.000040049266665953]
+  distortion_model: radtan
+  intrinsics: [350.4224918214405, 350.42698873973904, 364.45586188748047, 266.1758342332095] #fu, fv, cu, cv
+  resolution: [720, 540]
+  rostopic: /alphasense/cam3/image_raw

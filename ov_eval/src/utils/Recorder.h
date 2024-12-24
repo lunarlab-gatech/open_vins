@@ -165,7 +165,7 @@ protected:
             << q_ItoG(3);
 
     // output the covariance only if we have it
-    if (has_covariance) {
+    if (false && has_covariance) {
       outfile.precision(10);
       outfile << " " << cov_rot(0, 0) << " " << cov_rot(0, 1) << " " << cov_rot(0, 2) << " " << cov_rot(1, 1) << " " << cov_rot(1, 2) << " "
               << cov_rot(2, 2) << " " << cov_pos(0, 0) << " " << cov_pos(0, 1) << " " << cov_pos(0, 2) << " " << cov_pos(1, 1) << " "
