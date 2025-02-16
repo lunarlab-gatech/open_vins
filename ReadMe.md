@@ -6,9 +6,21 @@
 
 ## Simulate 4 Cameras
 
+### Build
 ```
-roslaunch ov_msckf simulation_4cams.launch
-rosrun rviz rviz -d ov_msckf/launch/display.rviz
+colcon build --event-handlers console_cohesion+ --packages-select ov_core ov_init ov_msckf ov_eval # ROS2 with verbose output
+```
+
+### Launch
+```
+source install/setup.bash
+ros2 launch ov_msckf subscribe.launch.py config:=hilti_2022
+ros2 run rviz2 rviz2 -d ov_msckf/launch/display_ros2.rviz
+```
+
+### Play
+```
+ros2 bag play xxx
 ```
 
 ## Original Info
