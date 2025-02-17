@@ -18,6 +18,13 @@ ros2 launch ov_msckf subscribe.launch.py config:=hilti_2022
 ros2 run rviz2 rviz2 -d ov_msckf/launch/display_ros2.rviz
 ```
 
+### ROS1 to ROS2 Bag Conversion
+```
+rosbags-convert <ros1_bag>.bag --dst <ros2_bag_folder>
+```
+Ref: [ROS1 to ROS2 Bag Conversion Guide](https://docs.openvins.com/dev-ros1-to-ros2.html)
+
+
 ### Play
 ```
 ros2 bag play xxx
