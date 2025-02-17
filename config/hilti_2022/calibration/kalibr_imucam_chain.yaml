@@ -1,0 +1,59 @@
+%YAML:1.0
+
+
+cam0:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [ 0.04014931, -0.01820891,  0.99902776,  0.14323387]
+    - [ 0.99717661, -0.06276793, -0.04121896,  0.25201437]
+    - [ 0.06345745,  0.99786203,  0.01563741, -0.04443521]
+    - [ 0.,          0.,          0.,          1.        ]
+  cam_overlaps: [1, 2, 3]
+  camera_model: pinhole
+  distortion_coeffs: [-0.03988727118647321, 0.002133046312974892, -0.004108264123191519, 0.0009859211062679468]
+  distortion_model: equidistant
+  intrinsics: [350.8723515949112, 351.00120737773335, 367.65700466474095, 253.7330805604577]
+  resolution: [720, 540]
+  rostopic: /alphasense/cam0/image_raw
+  timeshift_cam_imu: 0.0074938411314092795
+cam1:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [ 0.03513117, -0.02001373,  0.99918229,  0.13882605]
+    - [ 0.9970595,  -0.0674305,  -0.03640718,  0.14460721]
+    - [ 0.06810401,  0.99752322,  0.01758596, -0.05205748]
+    - [ 0.,          0.,          0.,          1.        ]
+  cam_overlaps: [0, 2, 3]
+  camera_model: pinhole
+  distortion_coeffs: [-0.038414553689120626, -0.004429370777975047, 0.0017479982437706959, -0.0006651029859803318]
+  distortion_model: equidistant
+  intrinsics: [352.05834731016216, 352.23590229413344, 347.6669189353244, 270.58136191153466]
+  resolution: [720, 540]
+  rostopic: /alphasense/cam1/image_raw
+  timeshift_cam_imu: 0.007989325939432938
+cam2:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [-0.99906567, -0.00749643,  0.04256276,  0.08760903]
+    - [ 0.04300536, -0.07489522,  0.99626364,  0.27235432]
+    - [-0.00428067,  0.99716323,  0.07514763, -0.0436045 ]
+    - [ 0.,          0.,          0.,          1.        ]
+  cam_overlaps: [0, 1]
+  camera_model: pinhole
+  distortion_coeffs: [-0.036150571689218515, -0.00141266022274492, -0.0012298449239666318, 7.075863496978955e-05]
+  distortion_model: equidistant
+  intrinsics: [351.11886307258123, 351.4018509590124, 364.6490227686564, 266.22676908025306]
+  resolution: [720, 540]
+  rostopic: /alphasense/cam3/image_raw
+  timeshift_cam_imu: 0.0038397848596712428
+cam3:
+  T_imu_cam: #rotation from camera to IMU R_CtoI, position of camera in IMU p_CinI
+    - [ 0.99934841, -0.01537051, -0.03265725,  0.0809232 ]
+    - [-0.03371687, -0.0746485,  -0.99663974,  0.13141603]
+    - [ 0.01288105,  0.99709144, -0.07511811, -0.0547565 ]
+    - [ 0.,          0.,          0.,          1.        ]
+  cam_overlaps: [0, 1]
+  camera_model: pinhole
+  distortion_coeffs: [-0.03665009987065715, -0.007149710336072362, 0.004340273609337934, -0.0014834357947698157]
+  distortion_model: equidistant
+  intrinsics: [350.67345586293334, 350.8664673814016, 342.43057607379257, 259.6992359886477]
+  resolution: [720, 540]
+  rostopic: /alphasense/cam4/image_raw
+  timeshift_cam_imu: 0.007749659121387403
