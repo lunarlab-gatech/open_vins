@@ -1,0 +1,11 @@
+# Calibrated on 2025-02-16 using https://github.com/ori-drs/allan_variance_ros
+#Accelerometer
+accelerometer_noise_density: 0.0016535525794666452
+accelerometer_random_walk: 0.0002572885340556865
+
+#Gyroscope
+gyroscope_noise_density: 0.0002219225048894534
+gyroscope_random_walk: 7.173022644869134e-06
+
+rostopic: '/alphasense/imu'
+update_rate: 400

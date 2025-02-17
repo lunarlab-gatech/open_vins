@@ -1,0 +1,5 @@
+# config file for computing the imu noise parameters (imu_alphasense.yaml) using allan_variance_ros
+imu_topic: "/alphasense/imu"
+imu_rate: 400
+measure_rate: 400 # Rate to which imu data is subsampled
+sequence_time: 5346 # duration of the sequence in seconds
