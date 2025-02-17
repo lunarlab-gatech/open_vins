@@ -4,7 +4,7 @@
 [![ROS 2 Workflow](https://github.com/rpng/open_vins/actions/workflows/build_ros2.yml/badge.svg)](https://github.com/rpng/open_vins/actions/workflows/build_ros2.yml)
 [![ROS Free Workflow](https://github.com/rpng/open_vins/actions/workflows/build.yml/badge.svg)](https://github.com/rpng/open_vins/actions/workflows/build.yml)
 
-## Simulate 4 Cameras
+## Multi-Cameras
 
 ### Build
 ```
@@ -29,6 +29,14 @@ Ref: [ROS1 to ROS2 Bag Conversion Guide](https://docs.openvins.com/dev-ros1-to-r
 ```
 ros2 bag play xxx
 ```
+
+### EVO evaluation
+```
+evo_ape tum state_gt.txt state_estimate.txt -va -s --plot --plot_mode xz --save_results results/hilti_exp04.zip
+```
+
+### Datasets
+[HILTI-OXFORD Dataset The Challenge Dataset 2022](https://hilti-challenge.com/dataset-2022.html)
 
 ## Progress
 
