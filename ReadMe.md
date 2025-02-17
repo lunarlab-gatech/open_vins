@@ -29,3 +29,7 @@ Ref: [ROS1 to ROS2 Bag Conversion Guide](https://docs.openvins.com/dev-ros1-to-r
 ```
 ros2 bag play xxx
 ```
+
+## Progress
+
+<img src="https://raw.githubusercontent.com/lunarlab-gatech/open_vins/refs/heads/dev_4cams/docs/multi_cam/hilti_2022_exp04_2025-02-17_00-16-25.png"/>
