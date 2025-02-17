@@ -105,9 +105,9 @@ ROS2Visualizer::ROS2Visualizer(std::shared_ptr<rclcpp::Node> node, std::shared_p
   if (save_total_state) {
 
     // files we will open
-    std::string filepath_est = "state_estimate.txt";
-    std::string filepath_std = "state_deviation.txt";
-    std::string filepath_gt = "state_groundtruth.txt";
+    std::string filepath_est = "/tmp/state_estimate.txt";
+    std::string filepath_std = "/tmp/state_deviation.txt";
+    std::string filepath_gt = "/tmp/state_groundtruth.txt";
     if (node->has_parameter("filepath_est")) {
       node->get_parameter<std::string>("filepath_est", filepath_est);
     }

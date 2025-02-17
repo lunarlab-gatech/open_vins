@@ -244,12 +244,13 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   of_state_est.setf(std::ios::fixed, std::ios::floatfield);
   of_state_est << timestamp_inI << " ";
   of_state_est.precision(6);
-  of_state_est << state->_imu->quat()(0) << " " << state->_imu->quat()(1) << " " << state->_imu->quat()(2) << " " << state->_imu->quat()(3)
-               << " ";
+  // of_state_est << state->_imu->quat()(0) << " " << state->_imu->quat()(1) << " " << state->_imu->quat()(2) << " " << state->_imu->quat()(3)
+  //              << " ";
   of_state_est << state->_imu->pos()(0) << " " << state->_imu->pos()(1) << " " << state->_imu->pos()(2) << " ";
-  of_state_est << state->_imu->vel()(0) << " " << state->_imu->vel()(1) << " " << state->_imu->vel()(2) << " ";
-  of_state_est << state->_imu->bias_g()(0) << " " << state->_imu->bias_g()(1) << " " << state->_imu->bias_g()(2) << " ";
-  of_state_est << state->_imu->bias_a()(0) << " " << state->_imu->bias_a()(1) << " " << state->_imu->bias_a()(2) << " ";
+  of_state_est << state->_imu->quat()(0) << " " << state->_imu->quat()(1) << " " << state->_imu->quat()(2) << " " << state->_imu->quat()(3);
+  // of_state_est << state->_imu->vel()(0) << " " << state->_imu->vel()(1) << " " << state->_imu->vel()(2) << " ";
+  // of_state_est << state->_imu->bias_g()(0) << " " << state->_imu->bias_g()(1) << " " << state->_imu->bias_g()(2) << " ";
+  // of_state_est << state->_imu->bias_a()(0) << " " << state->_imu->bias_a()(1) << " " << state->_imu->bias_a()(2) << " ";
 
   // STATE: Write current uncertainty to file
   of_state_std.precision(5);
@@ -267,12 +268,12 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   id = state->_imu->ba()->id();
   of_state_std << std::sqrt(cov(id + 0, id + 0)) << " " << std::sqrt(cov(id + 1, id + 1)) << " " << std::sqrt(cov(id + 2, id + 2)) << " ";
 
-  // TIMEOFF: Get the current estimate time offset
-  of_state_est.precision(7);
-  of_state_est << state->_calib_dt_CAMtoIMU->value()(0) << " ";
-  of_state_est.precision(0);
-  of_state_est << state->_options.num_cameras << " ";
-  of_state_est.precision(6);
+  // // TIMEOFF: Get the current estimate time offset
+  // of_state_est.precision(7);
+  // of_state_est << state->_calib_dt_CAMtoIMU->value()(0) << " ";
+  // of_state_est.precision(0);
+  // of_state_est << state->_options.num_cameras << " ";
+  // of_state_est.precision(6);
 
   // TIMEOFF: Get the current std values
   if (state->_options.do_calib_camera_timeoffset) {
@@ -286,16 +287,16 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
 
   // CALIBRATION: Write the camera values to file
   for (int i = 0; i < state->_options.num_cameras; i++) {
-    // Intrinsics values
-    of_state_est << state->_cam_intrinsics.at(i)->value()(0) << " " << state->_cam_intrinsics.at(i)->value()(1) << " "
-                 << state->_cam_intrinsics.at(i)->value()(2) << " " << state->_cam_intrinsics.at(i)->value()(3) << " ";
-    of_state_est << state->_cam_intrinsics.at(i)->value()(4) << " " << state->_cam_intrinsics.at(i)->value()(5) << " "
-                 << state->_cam_intrinsics.at(i)->value()(6) << " " << state->_cam_intrinsics.at(i)->value()(7) << " ";
-    // Rotation and position
-    of_state_est << state->_calib_IMUtoCAM.at(i)->value()(0) << " " << state->_calib_IMUtoCAM.at(i)->value()(1) << " "
-                 << state->_calib_IMUtoCAM.at(i)->value()(2) << " " << state->_calib_IMUtoCAM.at(i)->value()(3) << " ";
-    of_state_est << state->_calib_IMUtoCAM.at(i)->value()(4) << " " << state->_calib_IMUtoCAM.at(i)->value()(5) << " "
-                 << state->_calib_IMUtoCAM.at(i)->value()(6) << " ";
+    // // Intrinsics values
+    // of_state_est << state->_cam_intrinsics.at(i)->value()(0) << " " << state->_cam_intrinsics.at(i)->value()(1) << " "
+    //              << state->_cam_intrinsics.at(i)->value()(2) << " " << state->_cam_intrinsics.at(i)->value()(3) << " ";
+    // of_state_est << state->_cam_intrinsics.at(i)->value()(4) << " " << state->_cam_intrinsics.at(i)->value()(5) << " "
+    //              << state->_cam_intrinsics.at(i)->value()(6) << " " << state->_cam_intrinsics.at(i)->value()(7) << " ";
+    // // Rotation and position
+    // of_state_est << state->_calib_IMUtoCAM.at(i)->value()(0) << " " << state->_calib_IMUtoCAM.at(i)->value()(1) << " "
+    //              << state->_calib_IMUtoCAM.at(i)->value()(2) << " " << state->_calib_IMUtoCAM.at(i)->value()(3) << " ";
+    // of_state_est << state->_calib_IMUtoCAM.at(i)->value()(4) << " " << state->_calib_IMUtoCAM.at(i)->value()(5) << " "
+    //              << state->_calib_IMUtoCAM.at(i)->value()(6) << " ";
     // Covariance
     if (state->_options.do_calib_camera_intrinsics) {
       int index_in = state->_cam_intrinsics.at(i)->id();
@@ -320,17 +321,17 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   }
 
   // imu intrinsics: what model we are using
-  of_state_est.precision(0);
-  of_state_est << state->_options.imu_model << " ";
-  of_state_est.precision(8);
+  // of_state_est.precision(0);
+  // of_state_est << state->_options.imu_model << " ";
+  // of_state_est.precision(8);
   of_state_std.precision(0);
   of_state_std << state->_options.imu_model << " ";
   of_state_std.precision(8);
 
   // imu intrinsics: dw
-  of_state_est << state->_calib_imu_dw->value()(0) << " " << state->_calib_imu_dw->value()(1) << " " << state->_calib_imu_dw->value()(2)
-               << " " << state->_calib_imu_dw->value()(3) << " " << state->_calib_imu_dw->value()(4) << " "
-               << state->_calib_imu_dw->value()(5) << " ";
+  // of_state_est << state->_calib_imu_dw->value()(0) << " " << state->_calib_imu_dw->value()(1) << " " << state->_calib_imu_dw->value()(2)
+  //              << " " << state->_calib_imu_dw->value()(3) << " " << state->_calib_imu_dw->value()(4) << " "
+  //              << state->_calib_imu_dw->value()(5) << " ";
   if (state->_options.do_calib_imu_intrinsics) {
     int index_dw = state->_calib_imu_dw->id();
     of_state_std << std::sqrt(cov(index_dw + 0, index_dw + 0)) << " " << std::sqrt(cov(index_dw + 1, index_dw + 1)) << " "
@@ -342,9 +343,9 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   }
 
   // imu intrinsics: da
-  of_state_est << state->_calib_imu_da->value()(0) << " " << state->_calib_imu_da->value()(1) << " " << state->_calib_imu_da->value()(2)
-               << " " << state->_calib_imu_da->value()(3) << " " << state->_calib_imu_da->value()(4) << " "
-               << state->_calib_imu_da->value()(5) << " ";
+  // of_state_est << state->_calib_imu_da->value()(0) << " " << state->_calib_imu_da->value()(1) << " " << state->_calib_imu_da->value()(2)
+  //              << " " << state->_calib_imu_da->value()(3) << " " << state->_calib_imu_da->value()(4) << " "
+  //              << state->_calib_imu_da->value()(5) << " ";
   if (state->_options.do_calib_imu_intrinsics) {
     int index_da = state->_calib_imu_da->id();
     of_state_std << std::sqrt(cov(index_da + 0, index_da + 0)) << " " << std::sqrt(cov(index_da + 1, index_da + 1)) << " "
@@ -356,10 +357,10 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   }
 
   // imu intrinsics: tg
-  of_state_est << state->_calib_imu_tg->value()(0) << " " << state->_calib_imu_tg->value()(1) << " " << state->_calib_imu_tg->value()(2)
-               << " " << state->_calib_imu_tg->value()(3) << " " << state->_calib_imu_tg->value()(4) << " "
-               << state->_calib_imu_tg->value()(5) << " " << state->_calib_imu_tg->value()(6) << " " << state->_calib_imu_tg->value()(7)
-               << " " << state->_calib_imu_tg->value()(8) << " ";
+  // of_state_est << state->_calib_imu_tg->value()(0) << " " << state->_calib_imu_tg->value()(1) << " " << state->_calib_imu_tg->value()(2)
+  //              << " " << state->_calib_imu_tg->value()(3) << " " << state->_calib_imu_tg->value()(4) << " "
+  //              << state->_calib_imu_tg->value()(5) << " " << state->_calib_imu_tg->value()(6) << " " << state->_calib_imu_tg->value()(7)
+  //              << " " << state->_calib_imu_tg->value()(8) << " ";
   if (state->_options.do_calib_imu_intrinsics && state->_options.do_calib_imu_g_sensitivity) {
     int index_tg = state->_calib_imu_tg->id();
     of_state_std << std::sqrt(cov(index_tg + 0, index_tg + 0)) << " " << std::sqrt(cov(index_tg + 1, index_tg + 1)) << " "
@@ -374,8 +375,8 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   }
 
   // imu intrinsics: kalibr R_gyrotoI
-  of_state_est << state->_calib_imu_GYROtoIMU->value()(0) << " " << state->_calib_imu_GYROtoIMU->value()(1) << " "
-               << state->_calib_imu_GYROtoIMU->value()(2) << " " << state->_calib_imu_GYROtoIMU->value()(3) << " ";
+  // of_state_est << state->_calib_imu_GYROtoIMU->value()(0) << " " << state->_calib_imu_GYROtoIMU->value()(1) << " "
+  //              << state->_calib_imu_GYROtoIMU->value()(2) << " " << state->_calib_imu_GYROtoIMU->value()(3) << " ";
   if (state->_options.do_calib_imu_intrinsics && state->_options.imu_model == StateOptions::ImuModel::KALIBR) {
     int index_wtoI = state->_calib_imu_GYROtoIMU->id();
     of_state_std << std::sqrt(cov(index_wtoI + 0, index_wtoI + 0)) << " " << std::sqrt(cov(index_wtoI + 1, index_wtoI + 1)) << " "
@@ -385,8 +386,8 @@ void ROSVisualizerHelper::sim_save_total_state_to_file(std::shared_ptr<State> st
   }
 
   // imu intrinsics: rpng R_acctoI
-  of_state_est << state->_calib_imu_ACCtoIMU->value()(0) << " " << state->_calib_imu_ACCtoIMU->value()(1) << " "
-               << state->_calib_imu_ACCtoIMU->value()(2) << " " << state->_calib_imu_ACCtoIMU->value()(3) << " ";
+  // of_state_est << state->_calib_imu_ACCtoIMU->value()(0) << " " << state->_calib_imu_ACCtoIMU->value()(1) << " "
+  //              << state->_calib_imu_ACCtoIMU->value()(2) << " " << state->_calib_imu_ACCtoIMU->value()(3) << " ";
   if (state->_options.do_calib_imu_intrinsics && state->_options.imu_model == StateOptions::ImuModel::RPNG) {
     int index_atoI = state->_calib_imu_ACCtoIMU->id();
     of_state_std << std::sqrt(cov(index_atoI + 0, index_atoI + 0)) << " " << std::sqrt(cov(index_atoI + 1, index_atoI + 1)) << " "

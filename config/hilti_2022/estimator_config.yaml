@@ -67,7 +67,7 @@ record_timing_filepath: "/tmp/traj_timing.txt" # https://docs.openvins.com/eval-
 
 # if we want to save the simulation state and its diagional covariance
 # use this with rosrun ov_eval error_simulation
-save_total_state: false
+save_total_state: true
 filepath_est: "/tmp/ov_estimate.txt"
 filepath_std: "/tmp/ov_estimate_std.txt"
 filepath_gt: "/tmp/ov_groundtruth.txt"
