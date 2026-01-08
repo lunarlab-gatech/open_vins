@@ -1,0 +1,4 @@
+[submodule "dependencies/robotdataprocess"]
+	path = dependencies/robotdataprocess
+	url = https://github.com/lunarlab-gatech/robotdataprocess.git
+	branch = develop

@@ -19,6 +19,25 @@ details on what the system supports.
 * Getting started guide - https://docs.openvins.com/getting-started.html
 * Publication reference - https://pgeneva.com/downloads/papers/Geneva2020ICRA.pdf
 
+## Docker Installation
+
+TODO: Copy Docker installation instructions
+
+Write instructions to install robotdataprocess:
+```
+Navigate to robotdataprocess
+pip install . "numpy<1.25" && pip uninstall matplotlib -y
+pip install --upgrade pydantic typeguard
+```
+
+## Run Experiment
+
+Run the following commands:
+```
+colcon build 
+tmuxp load src/open_vins/tmux/tutorial.yaml
+```
+
 ## News / Events
 
 * **May 11, 2023** - Inertial intrinsic support released as part of v2.7 along with a few bug fixes and improvements to stereo KLT tracking. Please check out the [release page](https://github.com/rpng/open_vins/releases/tag/v2.7) for details.
@@ -42,21 +61,6 @@ details on what the system supports.
   on [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion). OpenVINS now publishes marginalized feature
   track, feature 3d position, and first camera intrinsics and extrinsics.
   See [PR#66](https://github.com/rpng/open_vins/pull/66) for details and discussion.
-* **April 3, 2020** - Released [v2.0](https://github.com/rpng/open_vins/releases/tag/v2.0) update to the codebase with
-  some key refactoring, ros-free building, improved dataset support, and single inverse depth feature representation.
-  Please check out the [release page](https://github.com/rpng/open_vins/releases/tag/v2.0) for details.
-* **January 21, 2020** - Our paper has been accepted for presentation in [ICRA 2020](https://www.icra2020.org/). We look
-  forward to seeing everybody there! We have also added links to a few videos of the system running on different
-  datasets.
-* **October 23, 2019** - OpenVINS placed first in the [IROS 2019 FPV Drone Racing VIO Competition
-  ](http://rpg.ifi.uzh.ch/uzh-fpv.html). We will be giving a short presentation at
-  the [workshop](https://wp.nyu.edu/workshopiros2019mav/) at 12:45pm in Macau on November 8th.
-* **October 1, 2019** - We will be presenting at the [Visual-Inertial Navigation: Challenges and Applications
-  ](http://udel.edu/~ghuang/iros19-vins-workshop/index.html) workshop at [IROS 2019](https://www.iros2019.org/). The
-  submitted workshop paper can be found at [this](http://udel.edu/~ghuang/iros19-vins-workshop/papers/06.pdf) link.
-* **August 21, 2019** - Open sourced [ov_maplab](https://github.com/rpng/ov_maplab) for interfacing OpenVINS with
-  the [maplab](https://github.com/ethz-asl/maplab) library.
-* **August 15, 2019** - Initial release of OpenVINS repository and documentation website!
 
 ## Project Features
 
@@ -127,59 +131,9 @@ details on what the system supports.
   closure detection to improve frequency.
 
 
-## Demo Videos
 
-<a href="http://www.youtube.com/watch?v=KCX51GvYGss">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/KCX51GvYGss.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=Lc7VQHngSuQ">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/Lc7VQHngSuQ.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=vaia7iPaRW8">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/vaia7iPaRW8.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=MCzTF9ye2zw">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/MCzTF9ye2zw.jpg"  width="120" height="90"/>
-</a>
-<a href="http://www.youtube.com/watch?v=eSQLWcNrx_I">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/eSQLWcNrx_I.jpg" width="120" height="90" />
-</a>
-<br/>
-
-<a href="http://www.youtube.com/watch?v=187AXuuGNNw">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/187AXuuGNNw.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=oUoLlrFryk0">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/oUoLlrFryk0.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=ExPIGwORm4E">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/ExPIGwORm4E.jpg" width="120" height="90" />
-</a>
-<a href="http://www.youtube.com/watch?v=lXHl-qgLGl8">
-   <img src="https://raw.githubusercontent.com/rpng/open_vins/master/docs/youtube/lXHl-qgLGl8.jpg" width="120" height="90" />
-</a>
-
-
-
-## Credit / Licensing
-
-This code was written by the [Robot Perception and Navigation Group (RPNG)](https://sites.udel.edu/robot/) at the
-University of Delaware. If you have any issues with the code please open an issue on our github page with relevant
-implementation details and references. For researchers that have leveraged or compared to this work, please cite the
-following:
-
-```txt
-@Conference{Geneva2020ICRA,
-  Title      = {{OpenVINS}: A Research Platform for Visual-Inertial Estimation},
-  Author     = {Patrick Geneva and Kevin Eckenhoff and Woosik Lee and Yulin Yang and Guoquan Huang},
-  Booktitle  = {Proc. of the IEEE International Conference on Robotics and Automation},
-  Year       = {2020},
-  Address    = {Paris, France},
-  Url        = {\url{https://github.com/rpng/open_vins}}
-}
-```
+## Licensing
 
 The codebase and documentation is licensed under the [GNU General Public License v3 (GPL-3)](https://www.gnu.org/licenses/gpl-3.0.txt).
 You must preserve the copyright and license notices in your derivative work and make available the complete source code with modifications under the same license ([see this](https://choosealicense.com/licenses/gpl-3.0/); this is not legal advice).
-
 

@@ -107,3 +107,6 @@ RUN sudo apt install libboost-all-dev ros-humble-image-transport ros-humble-cv-b
 
 # Install additional plugins for rqt
 RUN sudo apt install ros-humble-rqt-* -y
+
+# Install pip
+RUN sudo apt update && sudo apt install python3-pip -y
