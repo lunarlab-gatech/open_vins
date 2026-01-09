@@ -5,9 +5,9 @@ environment:
   DATA_DIR: '/home/dbutterfield3/data/EuRoC/data'
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'hercules'
-  DATASET_NUM: 'V2.1.0'
-  ROBOT_NAME: 'Drone2'
-  ROBOT_TYPE: 'Drone'
+  DATASET_NUM: 'V2.1.1'
+  ROBOT_NAME: 'Husky2'
+  ROBOT_TYPE: 'Husky'
 options:
   default-command: /bin/bash
 
