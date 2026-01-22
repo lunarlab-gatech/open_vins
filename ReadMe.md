@@ -45,7 +45,7 @@ git submodule update --init --recursive
 Next, Install the python dependencies with the following commands:
 
 ```
-cd dependencies/robotdataprocess/
+cd src/open_vins_ws/dependencies/robotdataprocess/
 pip install . "numpy<1.25" && pip uninstall matplotlib -y
 pip install --upgrade pydantic typeguard
 ```
@@ -54,7 +54,7 @@ pip install --upgrade pydantic typeguard
 
 Run the following commands:
 ```
-cd ../..
+cd ../../../..
 colcon build 
 ```
 

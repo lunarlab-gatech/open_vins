@@ -5,7 +5,7 @@ environment:
   DATA_DIR: '/home/dbutterfield3/data/EuRoC/data'
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'hercules'
-  DATASET_NUM: 'V2.1.0'
+  DATASET_NUM: 'V2.3.C'
   ROBOT_NAME: 'Drone1'
   ROBOT_TYPE: 'Drone'
 options:
