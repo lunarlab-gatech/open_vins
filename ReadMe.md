@@ -45,7 +45,7 @@ git submodule update --init --recursive
 Next, Install the python dependencies with the following commands:
 
 ```
-cd src/open_vins_ws/dependencies/robotdataprocess/
+cd src/open_vins/dependencies/robotdataprocess/
 pip install . "numpy<1.25" && pip uninstall matplotlib -y
 pip install --upgrade pydantic typeguard
 ```
