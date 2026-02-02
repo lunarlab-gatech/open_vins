@@ -29,6 +29,13 @@
 #include "utils/opencv_lambda_body.h"
 #include "utils/print.h"
 
+#include <cmath>
+#include <cstdlib>
+#include <algorithm>
+#include <numeric>
+#include <fstream>
+#include <iomanip>
+
 using namespace ov_core;
 
 void TrackKLT::feed_new_camera(const CameraData &message) {
@@ -301,6 +308,8 @@ void TrackKLT::feed_stereo(const CameraData &message, size_t msg_id_left, size_t
   // Get our "good tracks"
   std::vector<cv::KeyPoint> good_left, good_right;
   std::vector<size_t> good_ids_left, good_ids_right;
+  std::vector<double> parallax_left_values;  // Per-feature parallax in pixels (left camera)
+  std::vector<double> parallax_right_values; // Per-feature parallax in pixels (right camera)
 
   // Loop through all left points
   for (size_t i = 0; i < pts_left_new.size(); i++) {
@@ -329,10 +338,31 @@ void TrackKLT::feed_stereo(const CameraData &message, size_t msg_id_left, size_t
       good_right.push_back(pts_right_new.at(index_right));
       good_ids_left.push_back(ids_left_old.at(i));
       good_ids_right.push_back(ids_right_old.at(index_right));
+
+      if(record_parallax_to_file) {
+        // Compute parallax for left camera (pixel displacement between previous and current frame)
+        double dx_l = pts_left_new.at(i).pt.x - pts_left_old.at(i).pt.x;
+        double dy_l = pts_left_new.at(i).pt.y - pts_left_old.at(i).pt.y;
+        parallax_left_values.push_back(std::sqrt(dx_l * dx_l + dy_l * dy_l));
+
+        // Compute parallax for right camera
+        double dx_r = pts_right_new.at(index_right).pt.x - pts_right_old.at(index_right).pt.x;
+        double dy_r = pts_right_new.at(index_right).pt.y - pts_right_old.at(index_right).pt.y;
+        parallax_right_values.push_back(std::sqrt(dx_r * dx_r + dy_r * dy_r));
+      }
+
       // PRINT_DEBUG("adding to stereo - %u , %u\n", ids_left_old.at(i), ids_right_old.at(index_right));
     } else if (mask_ll[i]) {
       good_left.push_back(pts_left_new.at(i));
       good_ids_left.push_back(ids_left_old.at(i));
+
+      if(record_parallax_to_file) {
+        // Compute parallax for left camera only (mono track)
+        double dx_l = pts_left_new.at(i).pt.x - pts_left_old.at(i).pt.x;
+        double dy_l = pts_left_new.at(i).pt.y - pts_left_old.at(i).pt.y;
+        parallax_left_values.push_back(std::sqrt(dx_l * dx_l + dy_l * dy_l));
+      }
+
       // PRINT_DEBUG("adding to left - %u \n",ids_left_old.at(i));
     }
   }
@@ -349,6 +379,14 @@ void TrackKLT::feed_stereo(const CameraData &message, size_t msg_id_left, size_t
     if (mask_rr[i] && !added_already) {
       good_right.push_back(pts_right_new.at(i));
       good_ids_right.push_back(ids_right_old.at(i));
+
+      if(record_parallax_to_file) {
+        // Compute parallax for right camera only (mono track)
+        double dx_r = pts_right_new.at(i).pt.x - pts_right_old.at(i).pt.x;
+        double dy_r = pts_right_new.at(i).pt.y - pts_right_old.at(i).pt.y;
+        parallax_right_values.push_back(std::sqrt(dx_r * dx_r + dy_r * dy_r));
+      }
+
       // PRINT_DEBUG("adding to right - %u \n", ids_right_old.at(i));
     }
   }
@@ -380,6 +418,98 @@ void TrackKLT::feed_stereo(const CameraData &message, size_t msg_id_left, size_t
     ids_last[cam_id_right] = good_ids_right;
   }
   rT6 = boost::posix_time::microsec_clock::local_time();
+
+  // Compute and write parallax statistics to file for features used for pose estimation (LEFT camera)
+  if (record_parallax_to_file && !parallax_left_values.empty()) {
+    const char* username_cstr = std::getenv("USERNAME");  // or "username" if that's what is set
+    std::string username = username_cstr ? username_cstr : "unknown";
+    // Mean
+    double sum_l = std::accumulate(parallax_left_values.begin(), parallax_left_values.end(), 0.0);
+    double mean_parallax_l = sum_l / parallax_left_values.size();
+
+    // Median
+    std::vector<double> sorted_parallax_l = parallax_left_values;
+    std::sort(sorted_parallax_l.begin(), sorted_parallax_l.end());
+    double median_parallax_l;
+    size_t n_l = sorted_parallax_l.size();
+    if (n_l % 2 == 0) {
+      median_parallax_l = (sorted_parallax_l[n_l / 2 - 1] + sorted_parallax_l[n_l / 2]) / 2.0;
+    } else {
+      median_parallax_l = sorted_parallax_l[n_l / 2];
+    }
+
+    // Standard deviation
+    double sq_sum_l = 0.0;
+    for (const auto &p : parallax_left_values) {
+      sq_sum_l += (p - mean_parallax_l) * (p - mean_parallax_l);
+    }
+    double std_parallax_l = std::sqrt(sq_sum_l / parallax_left_values.size());
+
+    PRINT_INFO("[PARALLAX] LEFT cam%zu: n=%zu, mean=%.2f px, median=%.2f px, std=%.2f px, min=%.2f px, max=%.2f px\n",
+               cam_id_left, parallax_left_values.size(), mean_parallax_l, median_parallax_l, std_parallax_l,
+               sorted_parallax_l.front(), sorted_parallax_l.back());
+
+    // Write to CSV file
+    static bool header_written_left = false;
+    std::ofstream parallax_file_left( "/home/" + username + "/open_vins_ws/src/open_vins/parallax_left.csv", std::ios::app);
+    if (parallax_file_left.is_open()) {
+      if (!header_written_left) {
+        parallax_file_left << "timestamp,cam_id,num_features,mean_px,median_px,std_px,min_px,max_px\n";
+        header_written_left = true;
+      }
+      parallax_file_left << std::fixed << std::setprecision(6) << message.timestamp << ","
+                         << cam_id_left << "," << parallax_left_values.size() << ","
+                         << mean_parallax_l << "," << median_parallax_l << "," << std_parallax_l << ","
+                         << sorted_parallax_l.front() << "," << sorted_parallax_l.back() << "\n";
+      parallax_file_left.close();
+    }
+  }
+
+  // Compute and write parallax statistics to file for features used for pose estimation (RIGHT camera)
+  if (record_parallax_to_file && !parallax_right_values.empty()) {
+    const char* username_cstr_r = std::getenv("USERNAME");
+    std::string username_r = username_cstr_r ? username_cstr_r : "unknown";
+    // Mean
+    double sum_r = std::accumulate(parallax_right_values.begin(), parallax_right_values.end(), 0.0);
+    double mean_parallax_r = sum_r / parallax_right_values.size();
+
+    // Median
+    std::vector<double> sorted_parallax_r = parallax_right_values;
+    std::sort(sorted_parallax_r.begin(), sorted_parallax_r.end());
+    double median_parallax_r;
+    size_t n_r = sorted_parallax_r.size();
+    if (n_r % 2 == 0) {
+      median_parallax_r = (sorted_parallax_r[n_r / 2 - 1] + sorted_parallax_r[n_r / 2]) / 2.0;
+    } else {
+      median_parallax_r = sorted_parallax_r[n_r / 2];
+    }
+
+    // Standard deviation
+    double sq_sum_r = 0.0;
+    for (const auto &p : parallax_right_values) {
+      sq_sum_r += (p - mean_parallax_r) * (p - mean_parallax_r);
+    }
+    double std_parallax_r = std::sqrt(sq_sum_r / parallax_right_values.size());
+
+    PRINT_INFO("[PARALLAX] RIGHT cam%zu: n=%zu, mean=%.2f px, median=%.2f px, std=%.2f px, min=%.2f px, max=%.2f px\n",
+               cam_id_right, parallax_right_values.size(), mean_parallax_r, median_parallax_r, std_parallax_r,
+               sorted_parallax_r.front(), sorted_parallax_r.back());
+
+    // Write to CSV file
+    static bool header_written_right = false;
+    std::ofstream parallax_file_right( "/home/" + username_r + "/open_vins_ws/src/open_vins/parallax_right.csv", std::ios::app);
+    if (parallax_file_right.is_open()) {
+      if (!header_written_right) {
+        parallax_file_right << "timestamp,cam_id,num_features,mean_px,median_px,std_px,min_px,max_px\n";
+        header_written_right = true;
+      }
+      parallax_file_right << std::fixed << std::setprecision(6) << message.timestamp << ","
+                          << cam_id_right << "," << parallax_right_values.size() << ","
+                          << mean_parallax_r << "," << median_parallax_r << "," << std_parallax_r << ","
+                          << sorted_parallax_r.front() << "," << sorted_parallax_r.back() << "\n";
+      parallax_file_right.close();
+    }
+  }
 
   //  // Timing information
   PRINT_ALL("[TIME-KLT]: %.4f seconds for pyramid\n", (rT2 - rT1).total_microseconds() * 1e-6);

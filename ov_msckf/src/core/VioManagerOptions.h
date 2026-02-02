@@ -174,6 +174,8 @@ struct VioManagerOptions {
       aruco_options.sigma_pix_sq = std::pow(aruco_options.sigma_pix, 2);
       parser->parse_config("zupt_chi2_multipler", zupt_options.chi2_multipler);
     }
+    // Set depth recording option (parsed in print_and_load_trackers)
+    msckf_options.record_depth_to_file = record_depth_to_file;
     PRINT_DEBUG("  Updater MSCKF Feats:\n");
     msckf_options.print();
     PRINT_DEBUG("  Updater SLAM Feats:\n");
@@ -444,6 +446,12 @@ struct VioManagerOptions {
   /// Parameters used by our feature initialize / triangulator
   ov_core::FeatureInitializerOptions featinit_options;
 
+  /// If we should record parallax information to file (from feature tracking)
+  bool record_parallax_to_file = false;
+
+  /// If we should record feature depth information to file (from triangulation)
+  bool record_depth_to_file = false;
+
   /**
    * @brief This function will load print out all parameters related to visual tracking
    * This allows for visual checking that everything was loaded properly from ROS/CMD parsers.
@@ -482,6 +490,8 @@ struct VioManagerOptions {
       }
       parser->parse_config("knn_ratio", knn_ratio);
       parser->parse_config("track_frequency", track_frequency);
+      parser->parse_config("record_parallax_to_file", record_parallax_to_file);
+      parser->parse_config("record_depth_to_file", record_depth_to_file);
     }
     PRINT_DEBUG("FEATURE TRACKING PARAMETERS:\n");
     PRINT_DEBUG("  - use_stereo: %d\n", use_stereo);
@@ -499,6 +509,8 @@ struct VioManagerOptions {
     PRINT_DEBUG("  - hist method: %d\n", (int)histogram_method);
     PRINT_DEBUG("  - knn ratio: %.3f\n", knn_ratio);
     PRINT_DEBUG("  - track frequency: %.1f\n", track_frequency);
+    PRINT_DEBUG("  - record parallax to file: %d\n", record_parallax_to_file);
+    PRINT_DEBUG("  - record depth to file: %d\n", record_depth_to_file);
     featinit_options.print(parser);
   }
 

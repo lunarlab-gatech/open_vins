@@ -2,12 +2,11 @@ session_name: open_vins
 
 environment:
   ROS_DIR: '/opt/ros/humble'
-  DATA_DIR: '/home/dbutterfield3/data/EuRoC/data'
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'hercules'
   DATASET_NUM: 'V2.3.C'
-  ROBOT_NAME: 'Drone1'
-  ROBOT_TYPE: 'Drone'
+  ROBOT_NAME: 'Husky1'
+  ROBOT_TYPE: 'Husky'
 options:
   default-command: /bin/bash
 

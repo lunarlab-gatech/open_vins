@@ -1,0 +1,36 @@
+session_name: open_vins
+
+environment:
+  ROS_DIR: '/opt/ros/humble'
+  DATA_DIR: '/home/$USERNAME/data/EuRoC/data'
+  ROS_WS: '/home/$USERNAME/open_vins_ws'
+  CONFIG_PREFIX: 'euroc_mav'
+  DATASET_NUM: 'V2.3.C'
+  ROBOT_NAME: 'Husky1'
+  ROBOT_TYPE: 'Husky'
+options:
+  default-command: /bin/bash
+
+windows:
+- window_name: main
+  layout: tiled
+  focus: true
+  shell_command_before:
+  - source $ROS_DIR/setup.bash
+  - source $ROS_WS/install/setup.bash
+  panes:
+  - shell_command:
+    - ros2 launch ov_msckf subscribe.launch.py config:=${CONFIG_PREFIX} save_total_state:=true filepath_est:=/home/$USERNAME/open_vins_ws/src/open_vins/output/${CONFIG_PREFIX}/${DATASET_NUM}/${ROBOT_NAME}/ov_estimate.txt filepath_std:=/home/$USERNAME/open_vins_ws/src/open_vins/output/${CONFIG_PREFIX}/${DATASET_NUM}/${ROBOT_NAME}/ov_estimate_std.txt filepath_gt:=/home/$USERNAME/open_vins_ws/src/open_vins/output/${CONFIG_PREFIX}/${DATASET_NUM}/${ROBOT_NAME}/ov_groundtruth.txt
+  - shell_command:
+    - sleep 2
+    - cd ${DATA_DIR}
+    - ros2 bag play V1_01_easy
+  - shell_command:
+    -
+  - shell_command:
+    - 
+
+- window_name: kill
+  layout: tiled
+  panes:
+  - tmux kill-session -t open_vins_

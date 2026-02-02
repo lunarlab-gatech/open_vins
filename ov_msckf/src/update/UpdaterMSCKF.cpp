@@ -34,6 +34,9 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/math/distributions/chi_squared.hpp>
+#include <fstream>
+#include <iomanip>
+#include <cstdlib>
 
 using namespace ov_core;
 using namespace ov_type;
@@ -255,6 +258,44 @@ void UpdaterMSCKF::update(std::shared_ptr<State> state, std::vector<std::shared_
     it2++;
   }
   rT3 = boost::posix_time::microsec_clock::local_time();
+
+  // Write estimated depth for each feature that passed chi2 test to CSV file
+  // Only log the anchor observation where the depth is defined
+  if (_options.record_depth_to_file) {
+    const char* username_cstr = std::getenv("USERNAME");
+    std::string username = username_cstr ? username_cstr : "unknown";
+    static bool depth_header_written = false;
+    std::ofstream depth_file("/home/" + username + "/open_vins_ws/src/open_vins/feature_depths.csv", std::ios::app);
+    if (depth_file.is_open()) {
+      if (!depth_header_written) {
+        depth_file << "timestamp,feature_id,cam_id,u,v,depth\n";
+        depth_header_written = true;
+      }
+      for (const auto &feat : feature_vec) {
+        // Get the depth (z-coordinate in anchor frame)
+        double depth = feat->p_FinA(2);
+        int anchor_cam_id = feat->anchor_cam_id;
+        double anchor_timestamp = feat->anchor_clone_timestamp;
+        // Find the anchor observation (the one at anchor_cam_id and anchor_timestamp)
+        if (feat->uvs.find(anchor_cam_id) != feat->uvs.end()) {
+          const auto &timestamps_vec = feat->timestamps.at(anchor_cam_id);
+          const auto &uvs_vec = feat->uvs.at(anchor_cam_id);
+          for (size_t i = 0; i < timestamps_vec.size(); i++) {
+            if (std::abs(timestamps_vec[i] - anchor_timestamp) < 1e-7) {
+              float u = uvs_vec[i](0);
+              float v = uvs_vec[i](1);
+              depth_file << std::fixed << std::setprecision(9) << anchor_timestamp << ","
+                         << feat->featid << "," << anchor_cam_id << ","
+                         << std::setprecision(2) << u << "," << v << ","
+                         << std::setprecision(4) << depth << "\n";
+              break;
+            }
+          }
+        }
+      }
+      depth_file.close();
+    }
+  }
 
   // We have appended all features to our Hx_big, res_big
   // Delete it so we do not reuse information

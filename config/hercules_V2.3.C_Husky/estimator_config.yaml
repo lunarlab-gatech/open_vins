@@ -13,7 +13,7 @@ calib_cam_timeoffset: true # if timeoffset between camera and IMU should be opti
 calib_imu_intrinsics: false # if imu intrinsics should be calibrated (rotation and skew-scale matrix)
 calib_imu_g_sensitivity: false # if gyroscope gravity sensitivity (Tg) should be calibrated
 
-max_clones: 11 # how many clones in the sliding window
+max_clones: 21 # how many clones in the sliding window
 max_slam: 50 # number of features in our state vector
 max_slam_in_update: 25 # update can be split into sequential updates of batches, how many in a batch
 max_msckf_in_update: 40 # how many MSCKF features to use in the update
@@ -21,7 +21,7 @@ dt_slam_delay: 1 # delay before initializing (helps with stability from bad init
 
 gravity_mag: 9.81 # magnitude of gravity in this location
 
-feat_rep_msckf: "GLOBAL_3D"
+feat_rep_msckf: "ANCHORED_MSCKF_INVERSE_DEPTH"
 feat_rep_slam: "ANCHORED_MSCKF_INVERSE_DEPTH"
 feat_rep_aruco: "ANCHORED_MSCKF_INVERSE_DEPTH"
 
@@ -71,7 +71,7 @@ record_timing_filepath: "/tmp/traj_timing.txt" # https://docs.openvins.com/eval-
 # our front-end feature tracking parameters
 # we have a KLT and descriptor based (KLT is better implemented...)
 use_klt: true # if true we will use KLT, otherwise use a ORB descriptor + robust matching
-num_pts: 200 # number of points (per camera) we will extract and try to track
+num_pts: 1000 # number of points (per camera) we will extract and try to track
 fast_threshold: 20 # threshold for fast extraction (warning: lower threshs can be expensive)
 grid_x: 5 # extraction sub-grid count for horizontal direction (uniform tracking)
 grid_y: 5 # extraction sub-grid count for vertical direction (uniform tracking)
@@ -81,6 +81,8 @@ track_frequency: 21.0 # frequency we will perform feature tracking at (in frames
 downsample_cameras: false # will downsample image in half if true
 num_opencv_threads: 4 # -1: auto, 0-1: serial, >1: number of threads
 histogram_method: "HISTOGRAM" # NONE, HISTOGRAM, CLAHE
+record_parallax_to_file: false # if true, record feature parallax statistics to CSV file
+record_depth_to_file: false # if true, record triangulated feature depths to CSV file
 
 # aruco tag tracker for the system
 # DICT_6X6_1000 from https://chev.me/arucogen/

@@ -9,3 +9,5 @@ doxgen_generated
 doc
 .vscode
 output/
+install/
+log/

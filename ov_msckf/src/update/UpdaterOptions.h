@@ -40,10 +40,14 @@ struct UpdaterOptions {
   /// Covariance for our raw pixel measurements
   double sigma_pix_sq = 1;
 
+  /// If we should record feature depth information to file
+  bool record_depth_to_file = false;
+
   /// Nice print function of what parameters we have loaded
   void print() {
     PRINT_DEBUG("    - chi2_multipler: %.1f\n", chi2_multipler);
     PRINT_DEBUG("    - sigma_pix: %.2f\n", sigma_pix);
+    PRINT_DEBUG("    - record_depth_to_file: %d\n", record_depth_to_file);
   }
 };
 

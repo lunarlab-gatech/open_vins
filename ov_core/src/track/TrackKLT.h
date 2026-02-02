@@ -50,11 +50,12 @@ public:
    * @param gridx size of grid in the x-direction / u-direction
    * @param gridy size of grid in the y-direction / v-direction
    * @param minpxdist features need to be at least this number pixels away from each other
+   * @param record_parallax if we should record parallax information to a CSV file
    */
   explicit TrackKLT(std::unordered_map<size_t, std::shared_ptr<CamBase>> cameras, int numfeats, int numaruco, bool stereo,
-                    HistogramMethod histmethod, int fast_threshold, int gridx, int gridy, int minpxdist)
+                    HistogramMethod histmethod, int fast_threshold, int gridx, int gridy, int minpxdist, bool record_parallax = false)
       : TrackBase(cameras, numfeats, numaruco, stereo, histmethod), threshold(fast_threshold), grid_x(gridx), grid_y(gridy),
-        min_px_dist(minpxdist) {}
+        min_px_dist(minpxdist), record_parallax_to_file(record_parallax) {}
 
   /**
    * @brief Process a new image
@@ -138,6 +139,9 @@ protected:
 
   // Minimum pixel distance to be "far away enough" to be a different extracted feature
   int min_px_dist;
+
+  // If we should record parallax information to file
+  bool record_parallax_to_file = false;
 
   // How many pyramid levels to track
   int pyr_levels = 5;
