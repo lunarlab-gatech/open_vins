@@ -68,6 +68,12 @@ void UpdaterSLAM::delayed_init(std::shared_ptr<State> state, std::vector<std::sh
   boost::posix_time::ptime rT0, rT1, rT2, rT3;
   rT0 = boost::posix_time::microsec_clock::local_time();
 
+  // Counters for rejection reasons
+  int num_rejected_triangulation = 0;
+  int num_rejected_gaussnewton = 0;
+  int num_rejected_initialization = 0;
+  int num_successful_slam = 0;
+
   // 0. Get all timestamps our clones are at (and thus valid measurement times)
   std::vector<double> clonetimes;
   for (const auto &clone_imu : state->_clones_IMU) {
@@ -136,7 +142,14 @@ void UpdaterSLAM::delayed_init(std::shared_ptr<State> state, std::vector<std::sh
     }
 
     // Remove the feature if not a success
-    if (!success_tri || !success_refine) {
+    if (!success_tri) {
+      num_rejected_triangulation++;
+      (*it1)->to_delete = true;
+      it1 = feature_vec.erase(it1);
+      continue;
+    }
+    if (!success_refine) {
+      num_rejected_gaussnewton++;
       (*it1)->to_delete = true;
       it1 = feature_vec.erase(it1);
       continue;
@@ -233,8 +246,10 @@ void UpdaterSLAM::delayed_init(std::shared_ptr<State> state, std::vector<std::sh
     if (StateHelper::initialize(state, landmark, Hx_order, H_x, H_f, R, res, chi2_multipler)) {
       state->_features_SLAM.insert({(*it2)->featid, landmark});
       (*it2)->to_delete = true;
+      num_successful_slam++;
       it2++;
     } else {
+      num_rejected_initialization++;
       (*it2)->to_delete = true;
       it2 = feature_vec.erase(it2);
     }
@@ -247,6 +262,13 @@ void UpdaterSLAM::delayed_init(std::shared_ptr<State> state, std::vector<std::sh
     PRINT_ALL("[SLAM-DELAY]: %.4f seconds to triangulate\n", (rT2 - rT1).total_microseconds() * 1e-6);
     PRINT_ALL("[SLAM-DELAY]: %.4f seconds initialize (%d features)\n", (rT3 - rT2).total_microseconds() * 1e-6, (int)feature_vec.size());
     PRINT_ALL("[SLAM-DELAY]: %.4f seconds total\n", (rT3 - rT1).total_microseconds() * 1e-6);
+  }
+
+  // Print rejection and success statistics
+  int total_rejected = num_rejected_triangulation + num_rejected_gaussnewton + num_rejected_initialization;
+  if (total_rejected > 0 || num_successful_slam > 0) {
+    PRINT_INFO("[SLAM-DELAY]: rej T %d, GN %d, Init %d; SLAM %d\n",
+               num_rejected_triangulation, num_rejected_gaussnewton, num_rejected_initialization, num_successful_slam);
   }
 }
 
