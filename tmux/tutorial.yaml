@@ -5,8 +5,8 @@ environment:
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'hercules'
   DATASET_NUM: 'V2.3.C'
-  ROBOT_NAME: 'Husky1'
-  ROBOT_TYPE: 'Husky'
+  ROBOT_NAME: 'Drone2'
+  ROBOT_TYPE: 'Drone'
 options:
   default-command: /bin/bash
 
