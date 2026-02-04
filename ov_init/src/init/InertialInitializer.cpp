@@ -136,7 +136,8 @@ bool InertialInitializer::initialize(double &timestamp, Eigen::MatrixXd &covaria
   bool has_jerk = (!disparity_detected_moving_1to0 && disparity_detected_moving_2to1);
   bool is_still = (!disparity_detected_moving_1to0 && !disparity_detected_moving_2to1);
   if (((has_jerk && wait_for_jerk) || (is_still && !wait_for_jerk)) && params.init_imu_thresh > 0.0) {
-    PRINT_DEBUG(GREEN "[init]: USING STATIC INITIALIZER METHOD!\n" RESET);
+    PRINT_INFO(YELLOW "[init]: wait_for_jerk val: %d " RESET, wait_for_jerk);
+    PRINT_INFO(GREEN "[init]: USING STATIC INITIALIZER METHOD!\n" RESET);
     return init_static->initialize(timestamp, covariance, order, t_imu, wait_for_jerk);
   } else if (params.init_dyn_use && !is_still) {
 #ifndef __ANDROID__
