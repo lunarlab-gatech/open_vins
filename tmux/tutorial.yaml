@@ -4,8 +4,8 @@ environment:
   ROS_DIR: '/opt/ros/humble'
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'hercules'
-  DATASET_NUM: 'V2.3.C'
-  ROBOT_NAME: 'Drone2'
+  DATASET_NUM: 'V2.3.AP'
+  ROBOT_NAME: 'Drone1'
   ROBOT_TYPE: 'Drone'
 options:
   default-command: /bin/bash
