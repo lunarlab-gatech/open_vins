@@ -17,7 +17,7 @@ max_clones: 21 # how many clones in the sliding window
 max_slam: 50 # number of features in our state vector
 max_slam_in_update: 25 # update can be split into sequential updates of batches, how many in a batch
 max_msckf_in_update: 40 # how many MSCKF features to use in the update
-dt_slam_delay: 1 # delay before initializing (helps with stability from bad initialization...)
+dt_slam_delay: 2 # delay before initializing (helps with stability from bad initialization...)
 
 gravity_mag: 9.81 # magnitude of gravity in this location
 
@@ -108,3 +108,8 @@ use_mask: false
 # imu config should also have the correct noise values
 relative_config_imu: "kalibr_imu_chain.yaml"
 relative_config_imucam: "kalibr_imucam_chain.yaml"
+
+# ==================================================================
+# ==================================================================
+fi_max_cond_number: 50000
+fi_max_baseline: 80
