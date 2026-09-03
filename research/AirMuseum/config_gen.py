@@ -114,12 +114,14 @@ class AirMuseumConfigGen:
     @staticmethod
     def build_kalibr_imu_yaml() -> str:
         """Build the contents of a kalibr_imu_chain.yaml.
-        
-        T_i_b, time_offset, update_rate, and model are Kalibr-schema fields OpenVINS never reads
-        (see VioManagerOptions.h's "relative_config_imu" parsing), so they're omitted here.
-        Tw/Ta/R_IMUtoGYRO/R_IMUtoACC/Tg (IMU intrinsics) are likewise omitted: AirMuseum's
-        sensors/imu.yaml has no such calibration, and OpenVINS already falls back to
-        identity/zero when they're absent.
+
+        T_i_b, time_offset, and update_rate are Kalibr-schema fields OpenVINS never reads (see
+        VioManagerOptions.h's "relative_config_imu" parsing), so they're omitted here.
+
+        model and the Tw/R_IMUtoGYRO/Ta/R_IMUtoACC/Tg IMU intrinsics are NOT safely omittable:
+        OpenVINS's YamlParser always attempts to read them, and treats a missing required node 
+        as a fatal config error -- parser->successful()  turns false and run_subscribe_msckf 
+        exits immediately. 
 
         Returns:
             The full text of the kalibr_imu_chain.yaml file.
@@ -127,6 +129,8 @@ class AirMuseumConfigGen:
 
         with open(AirMuseumConfigGen.dataset_root() / "sensors" / "imu.yaml", "r") as f:
             noise: dict = yaml.safe_load(f)
+        identity_3x3 = "    - [ 1.0, 0.0, 0.0 ]\n    - [ 0.0, 1.0, 0.0 ]\n    - [ 0.0, 0.0, 1.0 ]\n"
+        zero_3x3 = "    - [ 0.0, 0.0, 0.0 ]\n    - [ 0.0, 0.0, 0.0 ]\n    - [ 0.0, 0.0, 0.0 ]\n"
         return (
             "%YAML:1.0\n\n"
             "imu0:\n"
@@ -135,6 +139,12 @@ class AirMuseumConfigGen:
             f"  gyroscope_noise_density: {noise['gyr_n']}      # [ rad / s / sqrt(Hz) ]   ( gyro \"white noise\" )\n"
             f"  gyroscope_random_walk: {noise['gyr_w']}        # [ rad / s^2 / sqrt(Hz) ] ( gyro bias diffusion )\n"
             "  rostopic: /imu0\n"
+            "  model: \"kalibr\"\n"
+            "  Tw:\n" + identity_3x3 +
+            "  R_IMUtoGYRO:\n" + identity_3x3 +
+            "  Ta:\n" + identity_3x3 +
+            "  R_IMUtoACC:\n" + identity_3x3 +
+            "  Tg:\n" + zero_3x3
         )
 
     @staticmethod

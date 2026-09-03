@@ -102,7 +102,11 @@ class AirMuseumOpenVINSPublisher:
             The robot's ground-truth OdometryData, uncropped.
         """
         input_path: Path = AirMuseumOpenVINSPublisher.robot_input_path(scenario, robot_name)
-        ground_truth: OdometryData = OdometryData.from_txt(input_path / "body_stamped_groundtruth.txt", "world", "imu",
+        # frame_id must be "global" (not e.g. "world") to match display_ros2.rviz's Fixed Frame and
+        # OpenVINS's own convention for its estimated output -- otherwise RViz has no TF to resolve
+        # this Path into the Fixed Frame and silently draws nothing, even though the topic itself
+        # publishes fine and shows "OK".
+        ground_truth: OdometryData = OdometryData.from_txt(input_path / "body_stamped_groundtruth.txt", "global", "imu",
                                                              CoordinateFrame.NONE, True, [0, 1, 2, 3, 7, 4, 5, 6])
         ground_truth.redefine_local_axes(AirMuseumOpenVINSPublisher.NAME_TO_FRAME_MAP[robot_name], CoordinateFrame.FLU)
         ground_truth.shift_to_start_at_identity()

@@ -88,6 +88,8 @@ track_frequency: 21.0 # frequency we will perform feature tracking at (in frames
 downsample_cameras: false # will downsample image in half if true
 num_opencv_threads: 4 # -1: auto, 0-1: serial, >1: number of threads
 histogram_method: "HISTOGRAM" # NONE, HISTOGRAM, CLAHE
+record_parallax_to_file: false # if true, record feature parallax statistics to CSV file
+record_depth_to_file: false # if true, record triangulated feature depths to CSV file
 
 # aruco tag tracker for the system
 # DICT_6X6_1000 from https://chev.me/arucogen/

@@ -93,6 +93,21 @@ public:
   void setup_subscribers(std::shared_ptr<ov_core::YamlParser> parser);
 
   /**
+   * @brief Starts periodic publishing of the tracking image via an rclcpp wall timer.
+   *
+   * This intentionally uses an rclcpp::TimerBase dispatched through the node's own
+   * executor, rather than a raw std::thread calling ROS2/image_transport APIs from
+   * outside rclcpp's concurrency model. A raw background thread calling
+   * image_transport::Publisher::getNumSubscribers() raced against FastDDS's own
+   * long-lived internal threads and intermittently segfaulted (confirmed via
+   * ThreadSanitizer) -- moving the thread's start point later did not help, since the
+   * race was not against setup_subscribers() but against DDS housekeeping threads that
+   * live for the entire node lifetime. Routing this through a timer lets rclcpp's own
+   * executor handle the synchronization instead.
+   */
+  void start_image_publishing_timer();
+
+  /**
    * @brief Will visualize the system if we have new things
    */
   void visualize();
@@ -144,6 +159,11 @@ protected:
   /// Simulator (is nullptr if we are not sim'ing)
   std::shared_ptr<Simulator> _sim;
 
+  // Image transport used to advertise it_pub_tracks/it_pub_loop_img_depth* below. Must be
+  // declared BEFORE those Publishers: members construct in declaration order and destroy in
+  // reverse, and those Publishers must not outlive the ImageTransport that created them.
+  image_transport::ImageTransport it_;
+
   // Our publishers
   image_transport::Publisher it_pub_tracks, it_pub_loop_img_depth, it_pub_loop_img_depth_color;
   rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pub_poseimu;
@@ -155,12 +175,21 @@ protected:
   rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr pub_loop_intrinsics;
   std::shared_ptr<tf2_ros::TransformBroadcaster> mTfBr;
 
+  /// Timer that drives periodic publish_images() calls (see start_image_publishing_timer())
+  rclcpp::TimerBase::SharedPtr image_pub_timer;
+
   // Our subscribers and camera synchronizers
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_imu;
   std::vector<rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr> subs_cam;
   typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::msg::Image, sensor_msgs::msg::Image> sync_pol;
-  std::vector<std::shared_ptr<message_filters::Synchronizer<sync_pol>>> sync_cam;
+  // NOTE: sync_subs_cam must be declared BEFORE sync_cam. Members are destroyed in reverse
+  // declaration order, and each Synchronizer's destructor disconnects from its Subscribers'
+  // callback signals -- that requires the Subscribers to still be alive. Declaring sync_cam
+  // second (destroyed first) ensures Synchronizers tear down while their Subscribers are still
+  // valid; the previous order caused a heap-use-after-free in message_filters::Signal1::
+  // removeCallback() during shutdown, confirmed via ThreadSanitizer.
   std::vector<std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image>>> sync_subs_cam;
+  std::vector<std::shared_ptr<message_filters::Synchronizer<sync_pol>>> sync_cam;
 
   // For path viz
   std::vector<geometry_msgs::msg::PoseStamped> poses_imu;

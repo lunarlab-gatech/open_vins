@@ -154,6 +154,17 @@ void Printer::debugPrint(PrintLevel level, const char location[], const char lin
   va_start(args, format);
   vprintf(format, args);
   va_end(args);
+
+  // stdout is fully (block) buffered when it isn't a terminal -- e.g. when captured by
+  // `ros2 launch`'s pipe, as opposed to line-buffered like it would be in an interactive
+  // shell. Without an explicit flush here, a WARNING/ERROR (e.g. "config field not found")
+  // printed shortly before a crash or abrupt std::exit() can sit in that buffer and never
+  // reach the console at all, silently hiding the actual cause of a failure. Flush eagerly
+  // for these two severities only, since they're rare -- DEBUG/INFO/ALL can be called at
+  // high frequency (e.g. per-frame) and shouldn't pay the flush cost.
+  if (level == PrintLevel::WARNING || level == PrintLevel::ERROR) {
+    fflush(stdout);
+  }
 #endif
 }
 
