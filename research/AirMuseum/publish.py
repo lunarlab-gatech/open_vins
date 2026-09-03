@@ -4,7 +4,7 @@ from getpass import getuser
 from pathlib import Path
 from robotdataprocess import CoordinateFrame, ImageDataOnDisk, ImuData, OdometryData
 from robotdataprocess.data_types.Data import ROSMsgLibType
-from robotdataprocess.ros.RosPublisher import publish_data_ROS_multiprocess
+from robotdataprocess.ros.RosPublisher import publish_data_ROS_multiprocess, _SingleDataPublisher
 from typing import Dict, List, Optional, Tuple
 
 
@@ -136,7 +136,9 @@ class AirMuseumOpenVINSPublisher:
             [None, None, None, "Path"],
             [imu.get_rate_hz(), left_img.get_rate_hz(), right_img.get_rate_hz(), ground_truth.get_rate_hz()],
             [1, 3, 3, 1],
-            ROSMsgLibType.RCLPY, True, verbose=True)
+            ROSMsgLibType.RCLPY, True, verbose=True,
+            data_publish_mode=[_SingleDataPublisher.PublishMode.PUB_ALL, _SingleDataPublisher.PublishMode.PUB_LAST,
+                                _SingleDataPublisher.PublishMode.PUB_LAST, _SingleDataPublisher.PublishMode.PUB_LAST])
 
     @staticmethod
     def main() -> None:
