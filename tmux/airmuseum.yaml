@@ -1,0 +1,33 @@
+session_name: open_vins
+
+environment:
+  ROS_DIR: '/opt/ros/humble'
+  ROS_WS: '/home/dbutterfield3/open_vins_ws'
+  CONFIG_PREFIX: 'airmuseum'
+  DATASET_NUM: 'Scenario5'
+  ROBOT_NAME: 'drone'
+options:
+  default-command: /bin/bash
+
+windows:
+- window_name: main
+  layout: tiled
+  focus: true
+  shell_command_before:
+  - source $ROS_DIR/setup.bash
+  - source $ROS_WS/install/setup.bash
+  panes:
+  - shell_command:
+    - ros2 launch ov_msckf subscribe.launch.py config:=${CONFIG_PREFIX}_${DATASET_NUM}_${ROBOT_NAME} save_total_state:=true filepath_est:=/home/dbutterfield3/data/AirMuseum_dataset/${DATASET_NUM}/results/OpenVINS/${ROBOT_NAME}/ov_estimate.txt filepath_std:=/home/dbutterfield3/data/AirMuseum_dataset/${DATASET_NUM}/results/OpenVINS/${ROBOT_NAME}/ov_estimate_std.txt filepath_gt:=/home/dbutterfield3/data/AirMuseum_dataset/${DATASET_NUM}/results/OpenVINS/${ROBOT_NAME}/ov_groundtruth.txt
+  - shell_command:
+    - sleep 2
+    - python3 src/open_vins/research/AirMuseum/publish.py --scenario ${DATASET_NUM} --robot_name ${ROBOT_NAME}
+  - shell_command:
+    -
+  - shell_command:
+    -
+
+- window_name: kill
+  layout: tiled
+  panes:
+  - tmux kill-session -t open_vins_
