@@ -71,7 +71,7 @@ bool DynamicInitializer::initialize(double &timestamp, Eigen::MatrixXd &covarian
   }
   if (_db->get_internal_data().size() < 0.75 * params.init_max_features) {
     PRINT_WARNING(RED "[init-d]: only %zu valid features of required (%.0f thresh)!!\n" RESET, _db->get_internal_data().size(),
-                  0.95 * params.init_max_features);
+                  0.75 * params.init_max_features);
     return false;
   }
   if (imu_data->size() < 2 || !have_old_imu_readings) {

@@ -45,10 +45,12 @@ bool StaticInitializer::initialize(double &timestamp, Eigen::MatrixXd &covarianc
   // Newest and oldest imu timestamp
   double newesttime = imu_data->at(imu_data->size() - 1).timestamp;
   double oldesttime = imu_data->at(0).timestamp;
+  PRINT_INFO(YELLOW "[init-s]: imu buffer has %d msgs spanning %.3f sec (need %.3f), oldest=%.3f newest=%.3f\n" RESET,
+             (int)imu_data->size(), newesttime - oldesttime, params.init_window_time, oldesttime, newesttime);
 
   // Return if we don't have enough for two windows
   if (newesttime - oldesttime < params.init_window_time) {
-    PRINT_INFO(YELLOW "[init-s]: unable to select window of IMU readings, not enough readings\n" RESET);
+    PRINT_INFO(YELLOW "[init-s]: unable to select window of IMU readings, not reached init_window_time\n" RESET);
     return false;
   }
 
@@ -65,7 +67,7 @@ bool StaticInitializer::initialize(double &timestamp, Eigen::MatrixXd &covarianc
 
   // Return if both of these failed
   if (window_1to0.size() < 2 || window_2to1.size() < 2) {
-    PRINT_INFO(YELLOW "[init-s]: unable to select window of IMU readings, not enough readings\n" RESET);
+    PRINT_INFO(YELLOW "[init-s]: unable to select window of IMU readings, not enough readings in each window\n" RESET);
     return false;
   }
 

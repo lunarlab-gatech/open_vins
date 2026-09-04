@@ -101,6 +101,18 @@ bool InertialInitializer::initialize(double &timestamp, Eigen::MatrixXd &covaria
     it_imu = imu_data->erase(it_imu);
   }
 
+  // DEBUG: measure the two slack terms from our static-init span derivation
+  // q = gap between the erase cutoff and the first IMU sample that actually survived it
+  // L = how far behind newest_cam_time the newest buffered IMU sample currently is
+  if (!imu_data->empty()) {
+    double nc_imu = newest_cam_time + params.calib_camimu_dt; // newest cam time, converted into IMU clock
+    double cutoff = oldest_time + params.calib_camimu_dt;
+    double q = imu_data->front().timestamp - cutoff;
+    double L = nc_imu - imu_data->back().timestamp;
+    PRINT_INFO(YELLOW "[init]: q=%.4f L=%.4f (sum=%.4f) cutoff=%.3f nc_imu=%.3f imu_oldest=%.3f imu_newest=%.3f\n" RESET, q, L, q + L,
+               cutoff, nc_imu, imu_data->front().timestamp, imu_data->back().timestamp);
+  }
+
   // Compute the disparity of the system at the current timestep
   // If disparity is zero or negative we will always use the static initializer
   bool disparity_detected_moving_1to0 = false;

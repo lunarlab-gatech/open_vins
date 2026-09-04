@@ -173,7 +173,10 @@ void VioManager::feed_measurement_imu(const ov_core::ImuData &message) {
     oldest_time = -1;
   }
   if (!is_initialized_vio) {
-    oldest_time = message.timestamp - params.init_options.init_window_time + state->_calib_dt_CAMtoIMU->value()(0) - 0.10;
+    // NOTE: message.timestamp is already in the IMU clock, so unlike the camera-domain cleanup
+    // calls elsewhere in this file, no +calib_dt conversion belongs here. Adding it previously
+    // shrank the retained window by calib_dt seconds relative to what init_window_time intends.
+    oldest_time = message.timestamp - params.init_options.init_window_time - 0.10;
   }
   propagator->feed_imu(message, oldest_time);
 

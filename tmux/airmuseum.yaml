@@ -5,7 +5,7 @@ environment:
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'airmuseum'
   DATASET_NUM: 'Scenario5'
-  ROBOT_NAME: 'drone'
+  ROBOT_NAME: 'robotB'
 options:
   default-command: /bin/bash
 
