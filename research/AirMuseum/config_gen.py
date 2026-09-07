@@ -213,7 +213,7 @@ class AirMuseumConfigGen:
     def main() -> None:
         """Generate kalibr_imu/imucam_chain.yaml files for one or all AirMuseum robots, then verify them."""
         parser = argparse.ArgumentParser(description="Generate OpenVINS configs for the AirMuseum dataset.")
-        parser.add_argument("--scenario", type=str, default="Scenario5", help="Dataset scenario (e.g. Scenario5).")
+        parser.add_argument("--scenario", type=str, default="Scenario3", help="Dataset scenario (e.g. Scenario5).")
         parser.add_argument("--robot_name", type=str, default=None, choices=AirMuseumConfigGen.ROBOT_NAMES,
                              help="Robot to generate for; defaults to all robots.")
         parser.add_argument("--force", action="store_true", help="Overwrite existing config files.")

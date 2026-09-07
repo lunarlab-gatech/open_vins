@@ -4,8 +4,8 @@ environment:
   ROS_DIR: '/opt/ros/humble'
   ROS_WS: '/home/dbutterfield3/open_vins_ws'
   CONFIG_PREFIX: 'airmuseum'
-  DATASET_NUM: 'Scenario5'
-  ROBOT_NAME: 'robotB'
+  DATASET_NUM: 'Scenario3'
+  ROBOT_NAME: 'drone'
 options:
   default-command: /bin/bash
 

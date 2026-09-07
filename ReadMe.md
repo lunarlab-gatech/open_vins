@@ -67,6 +67,9 @@ To run OpenVINS on the HERCULES dataset, run the following command. The dataset 
 tmuxp load src/open_vins/tmux/tutorial.yaml
 ```
 
+### AirMuseum dataset
+Same as above, but with ```airmuseum.yaml```.
+
 ## Licensing
 
 The codebase and documentation is licensed under the [GNU General Public License v3 (GPL-3)](https://www.gnu.org/licenses/gpl-3.0.txt).
